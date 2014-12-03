@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -42,21 +41,18 @@ func retrieve(uri string) {
 
 	var f func(*html.Node)
 	f = func(n *html.Node) {
-		if n.Type == html.ElementNode && n.Data == "a" {
-			fmt.Println("Get archor tag")
+		if n.Type == html.ElementNode {
+			fmt.Println("Get tag")
 			fmt.Println("  Data is:", n.Data)
 			fmt.Println("  Attributes are:")
-			for Vlen := 0; Vlen < len(n.Attr); Vlen++ {
-				fmt.Println("    Key: ", n.Attr[Vlen].Key)
-				fmt.Println("    Value: ", n.Attr[Vlen].Val)
-				fmt.Println("    Namespace: ", n.Attr[Vlen].Namespace)
+			for _, a := range n.Attr {
+				// fmt.Println("    Key:", a.Key)
+				fmt.Println("    Value:", a.Val)
 			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			go f(c)
+			f(c)
 		}
 	}
 	f(root)
-
-	time.Sleep(time.Second * 1)
 }
